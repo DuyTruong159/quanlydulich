@@ -8,6 +8,8 @@ router = DefaultRouter()
 router.register('City', views.CityViewSet)
 router.register('Tour', views.TourViewSet)
 router.register('Seat', views.SeatViewSet)
+router.register('Tag', views.TagViewSet)
+router.register('User', views.UserViewSet)
 
 urlpatterns = [
     path('api/', include(router.urls)),

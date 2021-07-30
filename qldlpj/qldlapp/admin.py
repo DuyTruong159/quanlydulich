@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.auth.models import Permission
 from django.utils.html import mark_safe
 from django import forms
 from .models import *
@@ -14,11 +15,14 @@ class SeatInline(admin.StackedInline):
     pk_name = 'tour'
     max_num = 2
 
+class TagInline(admin.StackedInline):
+    model = Tag.tour.through
+
 class CityAdmin(admin.ModelAdmin):
     inlines = [TourInline, ]
     list_display = ['id', 'name']
     search_fields = ['name']
-    list_filter = ['name', 'tour__name']
+    list_filter = ['name', 'tours__name']
 
 class TourForm(forms.ModelForm):
     description = forms.CharField(widget=CKEditorUploadingWidget)
@@ -27,8 +31,13 @@ class TourForm(forms.ModelForm):
         model = Tour
         fields = '__all__'
 
+class TagAdmin(admin.ModelAdmin):
+    list_display = ['id', 'name']
+    search_fields = ['name', 'tour']
+    list_filter = ['name', 'tour']
+
 class TourAdmin(admin.ModelAdmin):
-    inlines = [SeatInline, ]
+    inlines = [SeatInline, TagInline, ]
     form = TourForm
     list_display = ['id', 'name', 'city', 'datetime', 'available']
     search_fields = ['name', 'city__name']
@@ -52,3 +61,6 @@ admin_site = QldlAppAdminSite('myqldl')
 admin_site.register(City, CityAdmin)
 admin_site.register(Tour, TourAdmin)
 admin_site.register(Seat, SeatAdmin)
+admin_site.register(Tag, TagAdmin)
+admin_site.register(User)
+admin_site.register(Permission)
