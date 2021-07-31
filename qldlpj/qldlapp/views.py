@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
@@ -8,15 +9,37 @@ import random
 
 def index(request):
     tour = Tour.objects.filter(available=True)
+    pagination = Paginator(tour, 8)
+    page_number = request.GET.get("page", 1)
+    try:
+        page_obj = pagination.page(page_number)
+    except PageNotAnInteger:
+        page_obj = pagination.page(1)
+    except EmptyPage:
+        page_obj = pagination.page(pagination.num_pages)
+
     s = list(Tour.objects.filter(available=True))
-    s = random.sample(s,3)
-    return render(request, template_name='index.html', context={"tour": tour, "ran": s})
+    s = random.sample(s, 3)
+    return render(request, template_name='index.html', context={"tour": page_obj, "ran": s})
 
 def aboutus(request):
     return render(request, template_name='about_us.html')
 
 def mytour(request):
-    return render(request, template_name='tour.html')
+    tour = Tour.objects.filter(available=True)
+    pagination = Paginator(tour, 20)
+    page_number = request.GET.get("page", 1)
+    try:
+        page_obj = pagination.page(page_number)
+    except PageNotAnInteger:
+        page_obj = pagination.page(1)
+    except EmptyPage:
+        page_obj = pagination.page(pagination.num_pages)
+
+    seat1 = Seat.objects.filter(name__icontains='Adults')
+    seat2 = Seat.objects.filter(name__icontains='Childrens')
+
+    return render(request, template_name='tour.html', context={"tour": page_obj, "seat1": seat1, "seat2": seat2})
 
 def customerprotec(request):
     return render(request, template_name='customer_protection.html')
