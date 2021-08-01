@@ -33,7 +33,7 @@ class Seat(ItemBase):
     tour = models.ForeignKey("Tour", related_name="seats", on_delete=models.CASCADE, null=True)
 
 class Tag(ItemBase):
-    tour = models.ManyToManyField("Tour", related_name="tags")
+    tour = models.ManyToManyField("Tour", related_name="tags", blank=True)
 
 
 

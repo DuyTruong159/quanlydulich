@@ -15,15 +15,17 @@
                     <option value=".australia">Australia</option>
                 </select>
                 <a href="#" class=" current wow fadeInRight" data-filter="*">Show all</a>
-                <a href="#" class="wow fadeInRight" data-wow-delay=".2s" data-filter=".south-america">South America</a>
-                <a href="#" class="wow fadeInRight" data-wow-delay=".4s" data-filter=".asia">Asia</a>
-                <a href="#" class="wow fadeInRight" data-wow-delay=".6s" data-filter=".africa">Africa</a>
+                <a href="#" class="wow fadeInRight" data-wow-delay=".2s" data-filter=".south-america">Boat</a>
+                <a href="#" class="wow fadeInRight" data-wow-delay=".4s" data-filter=".asia">Mountains</a>
+                <a href="#" class="wow fadeInRight" data-wow-delay=".6s" data-filter=".africa">Climbing</a>
                 <a href="#" class="wow fadeInRight" data-wow-delay=".8s" data-filter=".north-america">North America</a>
                 <a href="#" class="wow fadeInRight" data-wow-delay="1s" data-filter=".europe">Europe</a>
                 <a href="#" class="wow fadeInRight" data-wow-delay="1.2s" data-filter=".australia">Australia</a>
             </div>
             <div class="filterable-items">
-                {% for item in tour %}
+                {% for t in tag %}
+                {% if t.name == "Boat" %}
+                {% for item in tboat %}
                 {% load static %}
                 <div class="filterable-item south-america">
                     <article class="offer-item">
@@ -34,16 +36,18 @@
                         <p>{{ item.description | safe| linebreaks }}</p>
                         {% for s in seat1 %}
                         {% if s.tour.id == item.id %}
+                        {% load humanize %}
                         <div class="price">
-                            <strong>{{ s.price }}</strong>
+                            <strong>{{ s.price | intcomma }},000 VND</strong>
                             <small>/ {{ s.name }}</small>
                         </div>
                         {% endif %}
                         {% endfor %}
                         {% for s in seat2 %}
                         {% if s.tour.id == item.id %}
+                        {% load humanize %}
                         <div class="price">
-                            <strong>{{ s.price }}</strong>
+                            <strong>{{ s.price | intcomma }},000 VND</strong>
                             <small>/ {{ s.name }}</small>
                         </div>
                         {% endif %}
@@ -51,14 +55,125 @@
                     </article>
                 </div>
                 {% endfor %}
+                {% elif t.name == "Mountains" %}
+                {% for item in tmountain %}
+                {% load static %}
+                <div class="filterable-item asia">
+                    <article class="offer-item">
+                        <figure class="featured-image">
+                            <img src="{% static item.image.url %}" alt="{{ item.name }}" width="118" height="210">
+                        </figure>
+                        <h2 class="entry-title"><a href="#">{{ item.name }}</a></h2>
+                        <p>{{ item.description | safe| linebreaks }}</p>
+                        {% for s in seat1 %}
+                        {% if s.tour.id == item.id %}
+                        {% load humanize %}
+                        <div class="price">
+                            <strong>{{ s.price | intcomma }},000 VND</strong>
+                            <small>/ {{ s.name }}</small>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                        {% for s in seat2 %}
+                        {% if s.tour.id == item.id %}
+                        {% load humanize %}
+                        <div class="price">
+                            <strong>{{ s.price | intcomma }},000 VND</strong>
+                            <small>/ {{ s.name }}</small>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </article>
+                </div>
+                {% endfor %}
+                {% elif t.name == 'Climbing' %}
+                {% for item in tclimb %}
+                {% load static %}
+                <div class="filterable-item africa">
+                    <article class="offer-item">
+                        <figure class="featured-image">
+                            <img src="{% static item.image.url %}" alt="{{ item.name }}" width="118" height="210">
+                        </figure>
+                        <h2 class="entry-title"><a href="#">{{ item.name }}</a></h2>
+                        <p>{{ item.description | safe| linebreaks }}</p>
+                        {% for s in seat1 %}
+                        {% if s.tour.id == item.id %}
+                        {% load humanize %}
+                        <div class="price">
+                            <strong>{{ s.price | intcomma }},000 VND</strong>
+                            <small>/ {{ s.name }}</small>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                        {% for s in seat2 %}
+                        {% if s.tour.id == item.id %}
+                        {% load humanize %}
+                        <div class="price">
+                            <strong>{{ s.price | intcomma }},000 VND</strong>
+                            <small>/ {{ s.name }}</small>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </article>
+                </div>
+                {% endfor %}
+                {% endif %}
+                {% endfor %}
             </div>
 
-            <div class="pagination wow fadeInUp">
-                <span class="page-numbers current">1</span>
-                <a href="#" class="page-numbers">2</a>
-                <a href="#" class="page-numbers">3</a>
-                <a href="#" class="page-numbers">4</a>
-            </div>
+            <!--Pagination-->
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                {% if tour.has_previous %}
+                    <li class="page-item">
+                    <a class="page-link" href="?page={{ tour.previous_page_number }}">Previous</a>
+                  </li>
+                {% else %}
+                    <li class="page-item disabled">
+                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                  </li>
+                {% endif %}
+
+                {% if tour.number|add:'-4' > 1 %}
+                    <li class="page-item"><a class="page-link" href="?page={{ tour.number|add:'-5' }}">&hellip;</a></li>
+                {% endif %}
+
+                {% for i in tour.paginator.page_range %}
+                    {% if tour.number == i %}
+                        <li class="page-item active" aria-current="page">
+                      <span class="page-link">
+                        {{ i }}
+                        <span class="sr-only">(current)</span>
+                      </span>
+                    </li>
+                    {% elif i > tour.number|add:'-5' and i < tour.number|add:'5' %}
+                         <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if tour.paginator.num_pages > tour.number|add:'4' %}
+                   <li class="page-item"><a class="page-link" href="?page={{ tour.number|add:'5' }}">&hellip;</a></li>
+                {% endif %}
+
+                {% if tour.has_next %}
+                    <li class="page-item">
+                    <a class="page-link" href="?page={{ tour.next_page_number }}">Next</a>
+                  </li>
+                {% else %}
+                    <li class="page-item disabled">
+                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Next</a>
+                  </li>
+                {% endif %}
+              </ul>
+            </nav>
+            <!--end of Pagination-->
+
+<!--            <div class="pagination wow fadeInUp">-->
+<!--                <span class="page-numbers current">1</span>-->
+<!--                <a href="#" class="page-numbers">2</a>-->
+<!--                <a href="#" class="page-numbers">3</a>-->
+<!--                <a href="#" class="page-numbers">4</a>-->
+<!--            </div>-->
 
         </div>
 
