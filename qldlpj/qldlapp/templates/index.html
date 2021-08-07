@@ -38,7 +38,7 @@
 						<p>Laborum expedita fugiat et quas quia! Odio dignissimos beatae aspernatur in vero culpa excepturi consequatur!</p>
 					</div>
 				</div>
-				<div class="col-md-3 col-sm-6 col-xs-12">
+				<div class="col-md-5 col-sm-6 col-xs-12">
 					<div class="feature left-icon wow fadeInLeft">
 						<i class="icon-plane"></i>
 						<h3 class="feature-title">Class aptent taciti</h3>
@@ -70,18 +70,18 @@
 				{% for item in tour %}
 				<div class="col-md-3 col-sm-6 col-xs-12">
 					<article class="offer wow bounceIn">
-						<figure class="featured-image"><img src="{% static item.image.name %}" style="width:270px;height:174px" alt=""></figure>
-						<h2 class="entry-title" style="height:35px;"><a href="">{{ item.name }}</a></h2>
-						<ul>
-							<li>{{ item.datetime }}</li>
-							<li>{{ item.duaration }}</li>
-							{% if item.available != True %}
-							<li>Unavailable</li>
-							{% else %}
-							<li>Available</li>
-							{% endif %}
+						<figure class="featured-image"><a href="{% url 'tourinfo' item.id %}">
+							<img src="{% static item.image.name %}" style="width:270px;height:174px" alt=""></a></figure>
+						<h2 class="entry-title text-center" style="height:35px;"><a href="">{{ item.name }}</a></h2>
+						<span style="display:block;" class="pl-3"><i class="bi bi-calendar3" style="margin-right:15px"></i>{{ item.datetime }}</span>
+						<span style="display:block;" class="pl-3"><i class="bi bi-clock-history" style="margin-right:15px"></i>{{ item.duaration }}</span>
+						{% if item.available != True %}
+						<span style="display:block;" class="pl-3"><i class="bi bi-check-circle" style="margin-right:15px"></i>Unavailable</span>
+						{% else %}
+						<span style="display:block;" class="pl-3"><i class="bi bi-x-circle" style="margin-right:15px"></i>Available</span>
+						{% endif %}
 						</ul>
-						<a href="#" class="button">See details</a>
+						<a href="{% url 'tourinfo' item.id %}" class="button">See details</a>
 					</article>
 				</div>
 				{% endfor %}

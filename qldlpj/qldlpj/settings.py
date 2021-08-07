@@ -42,6 +42,9 @@ INSTALLED_APPS = [
     'ckeditor_uploader',
     'rest_framework',
     'django.contrib.humanize',
+    'oauth2_provider',
+    'debug_toolbar',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -52,6 +55,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+]
+
+INTERNAL_IPS = [
+    '127.0.0.1'
 ]
 
 ROOT_URLCONF = 'qldlpj.urls'
@@ -95,9 +103,11 @@ MEDIA_ROOT = '%s/qldlapp/static' % BASE_DIR
 CKEDITOR_UPLOAD_PATH = 'ckeditor/'
 
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS':
-    'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 20
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 20,
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+    )
 }
 
 # Password validation

@@ -22,6 +22,18 @@
                 <a href="#" class="wow fadeInRight" data-wow-delay="1s" data-filter=".europe">Europe</a>
                 <a href="#" class="wow fadeInRight" data-wow-delay="1.2s" data-filter=".australia">Australia</a>
             </div>
+
+            <form action="">
+                <div class="row pb-5">
+                    <div class="col-md-11">
+                        <input class="form-control" name="kw" type="text" placeholder="Nhập từ tìm kiếm ..."/>
+                    </div>
+                    <div>
+                        <input type="submit" value="Search" class="btn btn-primary"/>
+                    </div>
+                </div>
+            </form>
+
             <div class="filterable-items">
                 {% for t in tag %}
                 {% if t.name == "Boat" %}
@@ -30,7 +42,7 @@
                 <div class="filterable-item south-america">
                     <article class="offer-item">
                         <figure class="featured-image">
-                            <img src="{% static item.image.url %}" alt="{{ item.name }}" width="118" height="210">
+                            <a href="{% url 'tourinfo' item.id %}"><img src="{% static item.image.url %}" alt="{{ item.name }}" width="118" height="210"></a>
                         </figure>
                         <h2 class="entry-title"><a href="#">{{ item.name }}</a></h2>
                         <p>{{ item.description | safe| linebreaks }}</p>
@@ -61,7 +73,7 @@
                 <div class="filterable-item asia">
                     <article class="offer-item">
                         <figure class="featured-image">
-                            <img src="{% static item.image.url %}" alt="{{ item.name }}" width="118" height="210">
+                            <a href="{% url 'tourinfo' item.id %}"><img src="{% static item.image.url %}" alt="{{ item.name }}" width="118" height="210"></a>
                         </figure>
                         <h2 class="entry-title"><a href="#">{{ item.name }}</a></h2>
                         <p>{{ item.description | safe| linebreaks }}</p>
@@ -92,7 +104,7 @@
                 <div class="filterable-item africa">
                     <article class="offer-item">
                         <figure class="featured-image">
-                            <img src="{% static item.image.url %}" alt="{{ item.name }}" width="118" height="210">
+                            <a href="{% url 'tourinfo' item.id %}"><img src="{% static item.image.url %}" alt="{{ item.name }}" width="118" height="210"></a>
                         </figure>
                         <h2 class="entry-title"><a href="#">{{ item.name }}</a></h2>
                         <p>{{ item.description | safe| linebreaks }}</p>
@@ -166,7 +178,7 @@
                 {% endif %}
               </ul>
             </nav>
-            <!--end of Pagination-->
+            end of Pagination
 
 <!--            <div class="pagination wow fadeInUp">-->
 <!--                <span class="page-numbers current">1</span>-->

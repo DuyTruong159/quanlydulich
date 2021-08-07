@@ -16,6 +16,7 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('about_us/', views.aboutus, name='aboutus'),
     path('tour_list/', views.mytour, name='tourlist'),
+    path('tour_info/<int:id>', views.tourinfo, name='tourinfo'),
     path('customer_protect/', views.customerprotec, name='customerprotec'),
     path('contact/', views.contact, name='contact'),
     path('admin/', admin_site.urls),
