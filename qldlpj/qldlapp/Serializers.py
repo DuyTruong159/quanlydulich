@@ -1,4 +1,5 @@
-from rest_framework.serializers import ModelSerializer
+from django.utils.html import strip_tags
+from rest_framework.serializers import ModelSerializer, SerializerMethodField, DateTimeField
 from .models import *
 
 class CitySerializer(ModelSerializer):
@@ -11,19 +12,33 @@ class SeatSerializer(ModelSerializer):
         model = Seat
         fields = ['id', 'name', 'price', 'tour']
 
+class TourSerializer(ModelSerializer):
+    image = SerializerMethodField()
+    datetime = DateTimeField(format="%Y-%m-%d")
+    seats = SeatSerializer(many=True)
+    tags = 'TagSerializer(many=True)'
+
+    def get_image(self, obj):
+        request = self.context['request']
+        name = obj.image.name
+        path = "/static/%s" % name
+
+        return request.build_absolute_uri(path)
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['description'] = strip_tags(instance.description)
+        return data
+
+    class Meta:
+        model = Tour
+        fields = ['id', 'name', 'image', 'description', 'city', 'datetime', 'duaration', 'stock', 'available', 'seats', 'tags']
 
 class TagSerializer(ModelSerializer):
-    tour = 'TourSerializer(many=True)'
+    tour = TourSerializer(many=True)
     class Meta:
         model = Tag
         fields = ['id', 'name', 'tour']
-
-class TourSerializer(ModelSerializer):
-    seats = SeatSerializer(many=True)
-    tags = TagSerializer(many=True)
-    class Meta:
-        model = Tour
-        fields = ['id', 'name', 'image', 'city', 'datetime', 'duaration', 'stock', 'available', 'seats', 'tags']
 
 class UserSerializer(ModelSerializer):
     class Meta:
