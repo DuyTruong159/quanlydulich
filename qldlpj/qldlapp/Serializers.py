@@ -1,4 +1,5 @@
 from django.utils.html import strip_tags
+from django.db.models import Avg
 from rest_framework.serializers import ModelSerializer, SerializerMethodField, DateTimeField
 from .models import *
 
@@ -14,6 +15,8 @@ class SeatSerializer(ModelSerializer):
 
 class TourSerializer(ModelSerializer):
     image = SerializerMethodField()
+    rate = SerializerMethodField()
+    customer = SerializerMethodField()
     datetime = DateTimeField(format="%Y-%m-%d")
     seats = SeatSerializer(many=True)
     tags = 'TagSerializer(many=True)'
@@ -30,9 +33,21 @@ class TourSerializer(ModelSerializer):
         data['description'] = strip_tags(instance.description)
         return data
 
+    def get_rate(self,obj):
+        average = obj.comments.all().aggregate(Avg('rating')).get('rating__avg')
+        if average == None:
+            return 0
+        return int(average)
+
+    def get_customer(self, obj):
+        count = obj.comments.count()
+        if count == None:
+            return 0
+        return count
+
     class Meta:
         model = Tour
-        fields = ['id', 'name', 'image', 'description', 'city', 'datetime', 'duaration', 'stock', 'available', 'seats', 'tags']
+        fields = ['id', 'name', 'image', 'description', 'city', 'datetime', 'duaration', 'stock', 'available', 'seats', 'tags', 'rate', 'customer']
 
 class TagSerializer(ModelSerializer):
     tour = TourSerializer(many=True)
@@ -41,9 +56,10 @@ class TagSerializer(ModelSerializer):
         fields = ['id', 'name', 'tour']
 
 class UserSerializer(ModelSerializer):
+
     class Meta:
         model = User
-        fields = ['id', 'username', 'password', 'avatar', 'email']
+        fields = ['id', 'username', 'first_name', 'last_name', 'password', 'avatar', 'email']
         extra_kwargs = {
             'password': {'write_only': True}
         }
@@ -52,3 +68,22 @@ class UserSerializer(ModelSerializer):
         user = User(**validated_data)
         user.set_password(validated_data['password'])
         user.save()
+
+        return user
+
+class CommentSerializer(ModelSerializer):
+    user = UserSerializer()
+    tour = 'TourSerializer()'
+
+    class Meta:
+        model = Comment
+        fields = ['id', 'name', 'tour', 'user', 'rating', 'created_day']
+
+class TicketSerializer(ModelSerializer):
+    user = UserSerializer()
+    tour = TourSerializer()
+    seat = SeatSerializer()
+
+    class Meta:
+        model = Ticket
+        fields = ['id', 'user', 'tour', 'seat', 'quantity', 'created_day']

@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from ckeditor.fields import RichTextField
 
 class User(AbstractUser):
-    avatar = models.ImageField(upload_to='avatar/%Y/%m', default=None)
+    avatar = models.ImageField(upload_to='static/avatar/%Y/%m', default=None)
 
 class ItemBase(models.Model):
     class Meta:
@@ -35,6 +35,20 @@ class Seat(ItemBase):
 class Tag(ItemBase):
     tour = models.ManyToManyField("Tour", related_name="tags", blank=True)
 
+class Comment(ItemBase):
+    class Meta:
+        ordering = ['-id']
+
+    rating = models.IntegerField(null=True, blank=True)
+    tour = models.ForeignKey("Tour", related_name="comments", on_delete=models.CASCADE)
+    user = models.ForeignKey("User", related_name="comments", on_delete=models.CASCADE)
+
+class Ticket(models.Model):
+    tour = models.ForeignKey("Tour", related_name="tickets", on_delete=models.CASCADE)
+    seat = models.ForeignKey("Seat", related_name="tickets", on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey("User", related_name="tickets", on_delete=models.CASCADE)
+    quantity = models.CharField(max_length=500, null=True)
+    created_day = models.DateTimeField(auto_now_add=True)
 
 
 

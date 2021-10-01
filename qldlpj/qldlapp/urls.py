@@ -11,8 +11,11 @@ router.register('Tour', views.TourViewSet, 'tour')
 router.register('Seat', views.SeatViewSet)
 router.register('Tag', views.TagViewSet)
 router.register('User', views.UserViewSet)
+router.register('Comment', views.CommentViewSet)
+router.register('ticket', views.TicketViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
     path('admin/', admin_site.urls),
+    path('oauth2-info/', views.AuthInfo.as_view())
 ]
