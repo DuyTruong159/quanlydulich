@@ -67,12 +67,12 @@ class TourViewSet(viewsets.ModelViewSet):
     @action(methods=['post'], detail=True, url_path='add_ticket')
     def add_ticket(self, request, pk):
         quantity = request.data.get('quantity')
-        # seat = request.data.get('seat')
+        price = request.data.get('price')
         try:
             t = Ticket.objects.create(quantity=quantity,
                                       tour=self.get_object(),
-                                      user=request.user
-                                      )
+                                      user=request.user,
+                                      price=price)
             return Response(TicketSerializer(t).data, status=status.HTTP_201_CREATED)
         except:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
@@ -168,7 +168,17 @@ class CommentViewSet(viewsets.ModelViewSet):
         return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 class TicketViewSet(viewsets.ModelViewSet):
-    queryset = Ticket.objects.all()
     serializer_class = TicketSerializer
+
+    def get_queryset(self):
+        t = Ticket.objects.all()
+
+        u = self.request.query_params.get('u')
+        if u is not None:
+            t = t.filter(user_id=u)
+
+        return t
+
+
 
 

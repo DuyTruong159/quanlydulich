@@ -12,7 +12,7 @@ router.register('Seat', views.SeatViewSet)
 router.register('Tag', views.TagViewSet)
 router.register('User', views.UserViewSet)
 router.register('Comment', views.CommentViewSet)
-router.register('ticket', views.TicketViewSet)
+router.register('ticket', views.TicketViewSet, 'ticket')
 
 urlpatterns = [
     path('', include(router.urls)),

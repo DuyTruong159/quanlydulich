@@ -45,8 +45,8 @@ class Comment(ItemBase):
 
 class Ticket(models.Model):
     tour = models.ForeignKey("Tour", related_name="tickets", on_delete=models.CASCADE)
-    seat = models.ForeignKey("Seat", related_name="tickets", on_delete=models.CASCADE, null=True)
     user = models.ForeignKey("User", related_name="tickets", on_delete=models.CASCADE)
+    price = models.CharField(max_length=20, null=True)
     quantity = models.CharField(max_length=500, null=True)
     created_day = models.DateTimeField(auto_now_add=True)
 

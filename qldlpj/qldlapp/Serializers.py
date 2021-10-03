@@ -82,8 +82,7 @@ class CommentSerializer(ModelSerializer):
 class TicketSerializer(ModelSerializer):
     user = UserSerializer()
     tour = TourSerializer()
-    seat = SeatSerializer()
 
     class Meta:
         model = Ticket
-        fields = ['id', 'user', 'tour', 'seat', 'quantity', 'created_day']
+        fields = ['id', 'user', 'tour', 'price', 'quantity', 'created_day']
