@@ -167,6 +167,13 @@ class CommentViewSet(viewsets.ModelViewSet):
 
         return Response(status=status.HTTP_401_UNAUTHORIZED)
 
+    @action(methods=['get'], detail=False, url_path='customer_slide')
+    def get_customer(self, request):
+        c = Comment.objects.all()
+        c = random.sample(list(c), 4)
+        s = c
+        return Response(data=CommentSerializer(s, many=True).data, status=status.HTTP_200_OK)
+
 class TicketViewSet(viewsets.ModelViewSet):
     serializer_class = TicketSerializer
 
